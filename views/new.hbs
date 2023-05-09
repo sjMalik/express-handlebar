@@ -1,0 +1,21 @@
+<form class="form" action="/todos" method="post">
+    <div class="form-group">
+      <label for="title">Title</label>
+      <input type="text" name="title" id="title" class="form-control" placeholder="Enter Title">
+    </div>
+    <div class="form-group">
+      <label for="desc">Description</label>
+      <textarea type="text" name="desc" id="desc" class="form-control" placeholder="Enter Description" aria-describedby="helpId"></textarea>
+      <small id="helpId" class="text-muted">This is optional</small>
+    </div>
+    <div class="form-group">
+      <label for="priority">Priority</label>
+      <select class="form-select" id="priority" name="priority">
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+        <option>4</option>
+      </select>
+    </div>
+    <button type="submit" class="btn btn-default btn-success mt-3">Create</button>
+</form>
