@@ -1,19 +1,27 @@
 const express = require('express');
 const router = express.Router();
 const knex = require('../db/knex');
+const {validTodo, validId} = require('../lib/validations');
+const setStatusRenderError = require('../lib/setStatusRenderError');
+const queries = require('../db/queries');
 
 router.route('/')
     .get(async (req, res)=> {
-        const todos = await knex('todo').select();
-
-        res.render('all', {todos: todos})
+        try{
+            const todos = await queries.getAll();
+            res.render('all', {todos: todos})
+        }catch(e){
+            setStatusRenderError(res, 500, 'Get todos failed')
+        }
     })
     .post((req, res)=> {
         validateTodoRenderError(req, res, async (todo)=> {
-            const ids = await knex('todo')
-            .insert(todo).returning('id');
-            console.log(ids)
-            res.redirect(`/todos/${ids[0].id}`)
+            try{
+                const ids = await queries.create(req.body).returning('id');
+                res.redirect(`/todos/${ids[0].id}`)
+            }catch(e){
+                setStatusRenderError(res, 500, 'Create todo failed')
+            }
         });
     })
 
@@ -27,18 +35,25 @@ router.route('/:id')
         resposneAndRenderTodo(id, res, 'single')
     })
     .put((req, res)=> {
+        console.log(1);
         validateTodoRenderError(req, res, async (todo)=> {
-            await knex('todo')
-            .update(todo).where('id', req.params.id);
-            res.redirect(`/todos/${req.params.id}`)
+            try{
+                console.log(2)
+                await queries.update(todo, req.params.id);
+                res.redirect(`/todos/${req.params.id}`)
+            }catch(e){
+                setStatusRenderError(res, 500, 'update todo failed')
+            }
         });
     })
     .delete(async (req, res)=> {
         if(validId(req.params.id)){
-            await knex('todo')
-                    .del()
-                    .where('id', req.params.id);
-            res.redirect('/todos')
+            try{
+                await queries.delete(req.params.id);
+                res.redirect('/todos')
+            }catch(e){
+                setStatusRenderError(res, 500, 'delete todo failed')
+            }
         }else {
             res.status(200);
             res.render('error', {
@@ -62,35 +77,18 @@ function validateTodoRenderError(req, res, callback){
         };
         callback(todo);
     }else {
-        res.status(500);
-        res.render('error', {
-            message: 'Invalid Todo'
-        })
+        setStatusRenderError(res, 500, 'Invalid Todo')
     }
-}
-
-function validTodo(body){
-    return typeof body.title === 'string' &&
-            body.title.trim() !== '' &&
-            body.priority != 'undefined' &&
-            !isNaN(body.priority);
 }
 
 async function resposneAndRenderTodo(id, res, viewname) {
     if(!validId(id)){
-        res.status(500);
-        res.render('error', {
-            message: 'Invalid ID'
-        })
+        setStatusRenderError(res, 500, 'Invalid ID')
     }else{
-        const todo = await knex('todo').select().where('id', id).first();
-        console.log('todo', todo)
+        const todo = await queries.getOne(id);
         res.render(viewname, todo);
     }
 }
 
-function validId(id){
-    return !isNaN(id);
-}
 
 module.exports = router;
