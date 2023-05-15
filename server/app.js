@@ -4,10 +4,12 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const methodOverride = require('method-override');
+const cors = require('cors');
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const todosRouter = require('./routes/todo');
+const todoAPI = require('./api/todoAPI');
 
 
 const app = express();
@@ -30,10 +32,15 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(methodOverride('_method'));
+app.use(cors({
+  origin: 'http://localhost:8080',
+  optionsSuccessStatus: 200
+}))
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/todos', todosRouter);
+app.use('/api/v1/todo', todoAPI);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

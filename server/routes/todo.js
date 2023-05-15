@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const knex = require('../db/knex');
 const {validTodo, validId} = require('../lib/validations');
 const setStatusRenderError = require('../lib/setStatusRenderError');
 const queries = require('../db/queries');

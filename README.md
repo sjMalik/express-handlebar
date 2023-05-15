@@ -1,3 +1,13 @@
+## To run the server go to server directory and run
+```
+npm start
+```
+
+## To run the client go to client directory and run
+```
+npx http-server
+```
+
 ## express-generator
 The express package is the framework that exposes functionalities you can use in your code
 The express-generator package a utility that provides a command-line tool you can use to scaffold your project - ie create boilerplate folder structure, files and code.
