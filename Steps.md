@@ -12,6 +12,27 @@ We'll be using:
 2. Create database/table
     - npm i knex pg
     - knex init                                 // create knex config file
+    - knexfile content
+    ```
+            module.exports = {
+                development: {
+                    client: 'postgresql',
+                    connection: 'postgres://postgres:mysecretpassword@localhost/express_auth',
+                    pool: {
+                    min: 2,
+                    max: 10
+                    }
+                },
+                production: {
+                    client: 'postgresql',
+                    connection: process.env.DATABASE_URL + '?ssl=true',
+                    pool: {
+                    min: 2,
+                    max: 10
+                    }
+                }
+        };
+    ```
     - knex migrate:make <migration file name>   // Create a migration file
     - knex migrate:latest;                      // Migrate the db
     - knex migrate:rollback                     // Drop the tables
