@@ -4,6 +4,7 @@ const {validTodo, validId} = require('../lib/validations');
 const setStatusRenderError = require('../lib/setStatusRenderError');
 const queries = require('../db/queries');
 
+
 router.route('/')
     .get(async (req, res)=> {
         try{

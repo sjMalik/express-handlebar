@@ -11,8 +11,26 @@ const usersRouter = require('./routes/users');
 const todosRouter = require('./routes/todo');
 const todoAPI = require('./api/todoAPI');
 
-
 const app = express();
+
+
+const swaggerJsdoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
+
+const options = {
+    failOnErrors: true,
+    definition: {
+        openapi: '3.0.0',
+        info: {
+            title: 'express-handlebar',
+            version: '1.0.0'
+        }
+    },
+    apis: ['./api/*.js']
+};
+
+const swaggerSpec = swaggerJsdoc(options);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -59,3 +77,5 @@ app.use(function(err, req, res, next) {
 });
 
 module.exports = app;
+
+
