@@ -43,3 +43,6 @@ Example call with query override using HTML <form>:
   <button type="submit">Delete resource</button>
 </form>
 ```
+
+## Swagger
+![](./CRUD%20Swagger%20APIs.png)
